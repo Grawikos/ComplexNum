@@ -6,15 +6,13 @@
 using namespace std;
 
 ComplexNum::ComplexNum(double real, double imaginary)
+	: real(real), imaginary(imaginary)
 {
-	this->real = real;
-	this->imaginary = imaginary;
 }
 
 ComplexNum::ComplexNum(const ComplexNum& c)
+	: real(c.real), imaginary(c.imaginary)
 {
-	real = c.real;
-	imaginary = c.imaginary;
 }
 
 ComplexNum& ComplexNum::operator=(const ComplexNum& c)
@@ -67,6 +65,11 @@ ComplexNum ComplexNum::operator-(const double& c) const
 ComplexNum operator-(const double d, const ComplexNum& c)
 {
 	return ComplexNum(d - c.real, -c.imaginary);
+}
+
+ComplexNum ComplexNum::operator-()
+{
+	return ComplexNum(-real, -imaginary);
 }
 
 //*
@@ -134,7 +137,6 @@ ComplexNum& ComplexNum::operator+=(const double& d)
 	return *this;
 }
 
-
 ComplexNum& ComplexNum::operator-=(const ComplexNum& c)
 {
 	real -= c.real;
@@ -156,7 +158,6 @@ ComplexNum& ComplexNum::operator*=(const ComplexNum& c)
 	imaginary = tempImaginary;
 	return *this;
 }
-
 
 ComplexNum& ComplexNum::operator*=(const double& d)
 {
@@ -185,32 +186,51 @@ ComplexNum& ComplexNum::operator/=(const double& d)
 		cout << "Division by 0!";
 		exit(1);
 	}
-	real /= d; 
+	real /= d;
 	imaginary /= d;
 	return *this;
 }
 
-
-bool ComplexNum::operator==(const ComplexNum& c) const{
+bool ComplexNum::operator==(const ComplexNum& c) const
+{
 	return (real == c.real) && (imaginary == c.imaginary);
 }
 
-bool ComplexNum::operator==(const double& d) const{
+bool ComplexNum::operator==(const double& d) const
+{
 	return (real == d) && (imaginary == 0);
 }
 
-bool operator==(const double d, const ComplexNum& c){
-	return (c.real == d) && (c.imaginary == 0);	
+bool operator==(const double d, const ComplexNum& c)
+{
+	return (c.real == d) && (c.imaginary == 0);
 }
 
-bool ComplexNum::operator!=(const ComplexNum& c) const{
+bool ComplexNum::operator!=(const ComplexNum& c) const
+{
 	return (real != c.real) || (imaginary != c.imaginary);
 }
 
-bool ComplexNum::operator!=(const double d) const{
+bool ComplexNum::operator!=(const double& d) const
+{
 	return (real != d) || (imaginary != 0);
 }
 
-bool operator!=(const double d, const ComplexNum& c){
-	return (c.real != d) || (c.imaginary != 0);	
+bool operator!=(const double d, const ComplexNum& c)
+{
+	return (c.real != d) || (c.imaginary != 0);
+}
+
+double ComplexNum::phase()
+{
+	if (real >= 0)
+		return atan(imaginary / real);
+	if (imaginary >= 0)
+		return M_PI / 2 - atan(real / imaginary);
+	return -M_PI / 2 - atan(real / imaginary);
+}
+
+double ComplexNum::magnitude() const
+{
+	return hypot(real, imaginary);
 }
